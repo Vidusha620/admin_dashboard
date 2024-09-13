@@ -6,28 +6,27 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
+                <h2 class="card-header">Notes</h2>
                 <div class="card-body">
+
+                @if(session('success'))
+                    <div class="alert alert-success" role="alert">{{ session('success') }}</div>
+                @endif
                     <table id="dataTable" class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start Date</th>
-                                <th>Salary</th>
-                                <th>Actions</th>
+                            <th width="80px">No</th>
+                            <th>Name</th>
+                            <th>content</th>
+                            <th width="250px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($categories as $category)
+                            @forelse ($notes as $note)
                             <tr>
-                                <td>{{ $category->name }}</td>
-                                <td>{{ $category->position }}</td>
-                                <td>{{ $category->office }}</td>
-                                <td>{{ $category->age }}</td>
-                                <td>{{ $category->startDate }}</td>
-                                <td>{{ $category->salary }}</td>
+                                <td>{{ $note->name }}</td>
+                                <td>{{ $note->content }}</td>
+                                
                                 <td>
                                     <a href="{{ route('category.edit', $category->id) }}" class="btn btn-success">Edit</a>
                                     <a href="{{ route('category.show', $category->id) }}" class="btn btn-info">Show</a>
@@ -38,10 +37,14 @@
                                     </form>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                        <td colspan="4">There are no data.</td>
+                    </tr>
+                    @endforelse
                         </tbody>
                     </table>
-                    {{ $categories->links() }} <!-- Add pagination links -->
+                    {{ $notes->links() }}
                 </div>
             </div>
         </div>
