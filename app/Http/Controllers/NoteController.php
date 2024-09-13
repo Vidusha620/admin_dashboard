@@ -21,12 +21,11 @@ class NoteController extends Controller
         $notes = Note::latest()->paginate(5);
         return view('notes.index', compact('notes'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
-}
     }
-
     /**
      * Show the form for creating a new resource.
      */
+
     public function create(): View{
         return view('notes.create');
     }
@@ -34,62 +33,50 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(NoteStoreRequest $request): RedirectResponse
     {
-        $request->validate([
-            "name"=> "required|string",
-            "position"=> "required|string",
-            "office"=> "required|string",
-            "age"=> "required|string",
-            "startDate"=> "required|string",
-            "salary"=> "required|string"
+        Note::create($request->validated());
 
-
-
-        ]);
-        
-        Category::validate($request->all());
-
-        return redirect('/category')->route("")->with("success","Added successfully");
+        return redirect()->route("notes.index")->with("success","Note created successfully");
 
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Note $note): View
     {
-        return view("category.show");
+        return view("notes.show", compact("note"));
 
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Note $note): View
     {
-        return view("category.edit",compact("category"));
+        return view("notes.edit",compact("note"));
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(NoteUpdateRequest $request, Note $note): RedirectResponse
     {
-        $category->update($request->all());
+        $note->update($request->validated());
 
-        return redirect()->route("category.index")->with("success","Updated successfully");
+        return redirect()->route("notes.index")->with("success","Updated successfully");
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Note $note): RedirectResponse
     {
-        $category->delete();
+        $note->delete();
 
-        return redirect()->route('category.index')->with("success", "Deleted successfully");
+        return redirect()->route('notes.index')->with("success", "Deleted successfully");
     }
 }
